@@ -2,14 +2,9 @@ from passlib.context import CryptContext
 from dotenv import load_dotenv
 import os
 import psycopg2
-from domain.user_schemas import *
+from domain.profile_schemas import *
 
 load_dotenv()
-
-
-SECRET_KEY = os.getenv("SECRET_KEY")
-ALGORITHM = os.getenv("ALGORITHM")
-ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
 
 host_name = os.getenv("DB_HOST")
 port_number = os.getenv("PORT")
@@ -17,13 +12,7 @@ user_name = os.getenv("DB_USER")
 password_db = os.getenv("DB_PASSWORD")
 database_name = os.getenv("DB")
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-def get_hashed_password(password: str) -> str:
-    return pwd_context.hash(password)
-
-
-def get_user_by_id_services(id : int) -> User:
+def get_profile_by_id_services(id : int) -> Profile:
     conn = psycopg2.connect(
         host=host_name,
         port=port_number,
@@ -32,17 +21,17 @@ def get_user_by_id_services(id : int) -> User:
         database=database_name
     )
     cursor = conn.cursor()
-    cursor.execute("SELECT id, username, email FROM accounts WHERE id=%s", 
+    cursor.execute("SELECT id, account_id, nombre FROM perfiles WHERE id=%s", 
                     (str(id)))
     
     result = list(cursor.fetchone())
-    result = User(result)
+    result = Profile(result)
 
     conn.close()
     
     return result
 
-def create_user_service(username: str, email: str, password: str):
+def get_profiles_by_account_id_services(account_id : int) -> list[Profile]:
     conn = psycopg2.connect(
         host=host_name,
         port=port_number,
@@ -51,12 +40,31 @@ def create_user_service(username: str, email: str, password: str):
         database=database_name
     )
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO accounts (username, email, password) VALUES (%s, %s, %s)", 
-                    (username, email, get_hashed_password(password)))
+    cursor.execute("SELECT id, account_id, nombre FROM perfiles WHERE account_id=%s", 
+                    (str(account_id)))
+    
+    result = list(cursor.fetchall())
+    result = [Profile(x) for x in result]
+
+    conn.close()
+    
+    return result
+
+def create_profile_service(account_id: int, nombre: str):
+    conn = psycopg2.connect(
+        host=host_name,
+        port=port_number,
+        user=user_name,
+        password=password_db,
+        database=database_name
+    )
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO perfiles (account_id, nombre) VALUES (%s, %s)", 
+                    (str(account_id), nombre))
     conn.commit()
     conn.close()
 
-def update_user_service(id: int, username: str, email: str):
+def update_profile_service(id: int, nombre: str):
     conn = psycopg2.connect(
         host=host_name,
         port=port_number,
@@ -65,12 +73,12 @@ def update_user_service(id: int, username: str, email: str):
         database=database_name
     )
     cursor = conn.cursor()
-    cursor.execute("UPDATE accounts SET username=%s, email=%s WHERE id=%s", 
-                    (username, email, id))
+    cursor.execute("UPDATE perfiles SET nombre=%s WHERE id=%s", 
+                    (nombre, str(id)))
     conn.commit()
     conn.close()
 
-def delete_user_service(id: int):
+def delete_profile_service(id: int):
     conn = psycopg2.connect(
         host=host_name,
         port=port_number,
@@ -79,6 +87,6 @@ def delete_user_service(id: int):
         database=database_name
     )
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM accounts WHERE id=%s", (id,))
+    cursor.execute("DELETE FROM perfiles WHERE id=%s", (str(id)))
     conn.commit()
     conn.close()
