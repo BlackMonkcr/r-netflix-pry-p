@@ -1,7 +1,6 @@
 from fastapi import Depends, FastAPI, HTTPException
 import uvicorn
 from service.user_service import *
-from service.profile_service import *
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()

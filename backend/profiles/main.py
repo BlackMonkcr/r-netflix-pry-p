@@ -1,9 +1,6 @@
 from fastapi import Depends, FastAPI, HTTPException
 import uvicorn
-from service.user_service import *
 from service.profile_service import *
-from service.token_service import *
-from domain.token import Token
 from fastapi.middleware.cors import CORSMiddleware
 from typing_extensions import Annotated
 from fastapi.security import OAuth2PasswordRequestForm
@@ -45,21 +42,6 @@ def update_profile(id: int, nombre: str):
 def delete_profile(id: int):
     delete_profile_service(id)
     return {"message": "Profile deleted"}
-
-@app.post("/token")
-def create_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
-    user = authenticate_user(form_data.username, form_data.password)
-    if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    access_token_expires = timedelta(minutes=float(ACCESS_TOKEN_EXPIRE_MINUTES))
-    access_token = create_access_token(data={"sub": user.__dict__["email"]}, expires_delta=access_token_expires)
-    return Token(access_token=access_token, token_type="bearer")
-
-@app.get("/users/me")
-def read_users_me(token: str = Depends(oauth2_scheme)):
-    user = get_current_user(token)
-    return user
-
 
 
 if __name__ == "__main__":
