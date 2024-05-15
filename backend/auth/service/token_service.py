@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta, timezone
 import requests
 from typing import Union
-from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
@@ -34,7 +33,7 @@ def get_password_hash(password):
 
 def fetch_data(route: str, headers: dict = {}, params: dict = {}, method: str = "GET"):
     # Realiza una solicitud GET a una URL
-    route = "http://localhost:8001/" + route
+    route = "http://localhost:8003/" + route
     if method == "GET":
         response = requests.get(route, headers=headers, params=params)
     # Realiza una solicitud POST a una URL

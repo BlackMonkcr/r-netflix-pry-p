@@ -1,0 +1,18 @@
+ version: "3.3"
+
+ services:
+   api-auth:
+     build: ./auth
+     image: blackmonk/api-auth
+     ports:
+       - 8000:8000
+   api-profiles:
+     build: ./profiles
+     image: blackmonk/api-profiles
+     ports:
+       - 8001:8001
+   api-users:
+     build: ./users
+     image: blackmonk/api-users
+     ports:
+       - 8003:8003
