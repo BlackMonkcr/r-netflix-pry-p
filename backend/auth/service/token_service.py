@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta, timezone
+import requests
 from typing import Union
 from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException, status
@@ -9,7 +10,6 @@ from dotenv import load_dotenv
 import os
 from domain.user_schemas import User, UserInDB
 from domain.token import TokenData
-from service.user_service import get_user_by_email_services
 
 load_dotenv()
 
@@ -32,14 +32,43 @@ def verify_password(plain_password, hashed_password):
 def get_password_hash(password):
     return pwd_context.hash(password)
 
+def fetch_data(route: str, headers: dict = {}, params: dict = {}, method: str = "GET"):
+    # Realiza una solicitud GET a una URL
+    route = "http://localhost:8001/" + route
+    if method == "GET":
+        response = requests.get(route, headers=headers, params=params)
+    # Realiza una solicitud POST a una URL
+    elif method == "POST":
+        response = requests.post(route, headers=headers, params=params)
+    # Realiza una solicitud PUT a una URL
+    elif method == "PUT":
+        response = requests.put(route, headers=headers, params=params)
+    # Realiza una solicitud DELETE a una URL
+    elif method == "DELETE":
+        response = requests.delete(route, headers=headers, params=params)
+    # Realiza una solicitud PATCH a una URL
+    elif method == "PATCH":
+        response = requests.patch(route, headers=headers, params=params)
+
+    # Verifica si la solicitud fue exitosa (código de estado 200)
+    if response.status_code == 200:
+        # Devuelve los datos obtenidos de la solicitud
+        return response.json()
+    else:
+        # Si la solicitud no fue exitosa, devuelve un mensaje de error
+        return {"error": "No se pudo obtener los datos"}
+
 
 def authenticate_user(email: str, password: str):
-    user : UserInDB = get_user_by_email_services(email)
+    user : UserInDB = fetch_data(f"users/email/?email={email.replace('@', '%40')}")
+
+    print(user["password"])
+    
     if not user:
         return False
-    if not verify_password(password, user.password):
+    if not verify_password(password, user["password"]):
         return False
-    return User([user.id, user.username, user.email])
+    return User([user["id"], user["username"], user["email"]])
 
 
 def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None):
@@ -67,7 +96,7 @@ def get_current_user(token: str = Depends(oauth2_scheme)) -> User:
         token_data = TokenData(email=email)
     except JWTError:
         raise credentials_exception
-    user = get_user_by_email_services(email=token_data.email)
+    user : UserInDB = fetch_data(f"users/email/?email={email}")
     if user is None:
         raise credentials_exception
     return user

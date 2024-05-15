@@ -2,11 +2,7 @@ from fastapi import Depends, FastAPI, HTTPException
 import uvicorn
 from service.user_service import *
 from service.profile_service import *
-from service.token_service import *
-from domain.token import Token
 from fastapi.middleware.cors import CORSMiddleware
-from typing_extensions import Annotated
-from fastapi.security import OAuth2PasswordRequestForm
 
 app = FastAPI()
 
@@ -28,6 +24,13 @@ def read_users(id: int):
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
+@app.get("/users/email/")
+def read_users_by_email(email: str):
+    user = get_user_by_email_services(email)
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
+
 @app.post("/users/", response_model=dict)
 def create_user(username: str, email: str, password: str):
     create_user_service(username, email, password)
@@ -44,7 +47,6 @@ def delete_user(id: int):
     if delete_user_service(id) is None:
         raise HTTPException(status_code=404, detail="User not found")
     return {"message": "User deleted"}
-
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000, proxy_headers=True, timeout_keep_alive=300)
