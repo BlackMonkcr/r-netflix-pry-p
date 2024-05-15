@@ -1,4 +1,4 @@
- version: "3.3"
+ name: r-netflix
 
  services:
    api-auth:
@@ -10,9 +10,9 @@
      build: ./profiles
      image: blackmonk/api-profiles
      ports:
-       - 8001:8001
+       - 8001:8000
    api-users:
      build: ./users
      image: blackmonk/api-users
      ports:
-       - 8003:8003
+       - 8003:8000

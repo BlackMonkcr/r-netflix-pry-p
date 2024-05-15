@@ -3,4 +3,4 @@ WORKDIR /programas/api_profiles
 COPY requirements.txt . 
 RUN pip3 install -r requirements.txt
 COPY . .
-CMD ["uvicorn", "main:app", "-p", "8001", "--host"]
+CMD ["uvicorn", "main:app", "--port", "8000", "--host", "0.0.0.0"]
