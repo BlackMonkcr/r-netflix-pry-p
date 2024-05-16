@@ -12,7 +12,7 @@ user_name = os.getenv("DB_USER")
 password_db = os.getenv("DB_PASSWORD")
 database_name = os.getenv("DB")
 
-def get_content_by_id_services(id : int) -> Content:
+def getAllContent() -> list[Content]:
     conn = psycopg2.connect(
         host=host_name,
         port=port_number,
@@ -21,27 +21,7 @@ def get_content_by_id_services(id : int) -> Content:
         database=database_name
     )
     cursor = conn.cursor()
-    cursor.execute("SELECT id, account_id, nombre FROM perfiles WHERE id=%s", 
-                    (str(id)))
-    
-    result = list(cursor.fetchone())
-    result = Content(result)
-
-    conn.close()
-    
-    return result
-
-def get_content_by_account_id_services(account_id : int) -> list[Content]:
-    conn = psycopg2.connect(
-        host=host_name,
-        port=port_number,
-        user=user_name,
-        password=password_db,
-        database=database_name
-    )
-    cursor = conn.cursor()
-    cursor.execute("SELECT id, account_id, nombre FROM perfiles WHERE account_id=%s", 
-                    (str(account_id)))
+    cursor.execute("SELECT * FROM contenido")
     
     result = list(cursor.fetchall())
     result = [Content(x) for x in result]
@@ -50,7 +30,7 @@ def get_content_by_account_id_services(account_id : int) -> list[Content]:
     
     return result
 
-def create_content_service(account_id: int, nombre: str):
+def get_content_by_id(id: int) -> Content:
     conn = psycopg2.connect(
         host=host_name,
         port=port_number,
@@ -59,12 +39,51 @@ def create_content_service(account_id: int, nombre: str):
         database=database_name
     )
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO contenido (account_id, nombre) VALUES (%s, %s)", 
-                    (str(account_id), nombre))
+    cursor.execute("SELECT * FROM contenido WHERE id=%s", 
+                    (str(id),))
+    
+    result = cursor.fetchone()
+    result = Content(result)
+
+    conn.close()
+    
+    return result
+
+
+def get_content_by_type(type : str) -> Content:
+    conn = psycopg2.connect(
+        host=host_name,
+        port=port_number,
+        user=user_name,
+        password=password_db,
+        database=database_name
+    )
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM contenido WHERE type=%s", 
+                    (type,))
+    
+    result = cursor.fetchone()
+    result = Content(result)
+
+    conn.close()
+    
+    return result
+
+def create_content(account_id: int, title: str, description: str, type: str, url_content: str, url_cover: str):
+    conn = psycopg2.connect(
+        host=host_name,
+        port=port_number,
+        user=user_name,
+        password=password_db,
+        database=database_name
+    )
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO contenido (account_id, title, description, type, url_content, url_cover) VALUES (%s, %s, %s, %s, %s, %s)", 
+                    (str(account_id), title, description, type, url_content, url_cover))
     conn.commit()
     conn.close()
 
-def update_content_service(id: int, nombre: str):
+def patch_title_content(id: int, title: str):
     conn = psycopg2.connect(
         host=host_name,
         port=port_number,
@@ -73,8 +92,36 @@ def update_content_service(id: int, nombre: str):
         database=database_name
     )
     cursor = conn.cursor()
-    cursor.execute("UPDATE contenido SET nombre=%s WHERE id=%s", 
-                    (nombre, str(id)))
+    cursor.execute("UPDATE contenido SET title=%s WHERE id=%s", 
+                    (title, str(id)))
+    conn.commit()
+    conn.close()
+
+def patch_description(id: int, description: str):
+    conn = psycopg2.connect(
+        host=host_name,
+        port=port_number,
+        user=user_name,
+        password=password_db,
+        database=database_name
+    )
+    cursor = conn.cursor()
+    cursor.execute("UPDATE contenido SET description=%s WHERE id=%s", 
+                    (description, str(id)))
+    conn.commit()
+    conn.close()
+
+def patch_urlCover(id: int, url_cover: str):
+    conn = psycopg2.connect(
+        host=host_name,
+        port=port_number,
+        user=user_name,
+        password=password_db,
+        database=database_name
+    )
+    cursor = conn.cursor()
+    cursor.execute("UPDATE contenido SET url_cover=%s WHERE id=%s", 
+                    (url_cover, str(id)))
     conn.commit()
     conn.close()
 
