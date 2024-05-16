@@ -1,5 +1,5 @@
 FROM python:3-slim
-WORKDIR /programas/api_users
+WORKDIR /programas/api_subscriptions
 COPY requirements.txt . 
 RUN pip3 install -r requirements.txt
 COPY . .

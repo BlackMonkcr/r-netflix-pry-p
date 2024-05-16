@@ -11,6 +11,11 @@
      image: blackmonk/api-profiles
      ports:
        - 8001:8000
+   api-subscriptions:
+     build: ./subscriptions
+     image: blackmonk/api-subscriptions
+     ports:
+       - 8002:8000
    api-users:
      build: ./users
      image: blackmonk/api-users
