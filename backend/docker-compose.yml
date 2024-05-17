@@ -21,3 +21,8 @@
      image: blackmonk/api-users
      ports:
        - 8003:8000
+   api-content:
+     build: ./content
+     image: blackmonk/api-content
+     ports:
+       - 8004:8000

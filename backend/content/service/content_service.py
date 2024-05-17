@@ -12,7 +12,7 @@ user_name = os.getenv("DB_USER")
 password_db = os.getenv("DB_PASSWORD")
 database_name = os.getenv("DB")
 
-def getAllContent() -> list[Content]:
+def getAllContent_service() -> list[Content]:
     conn = psycopg2.connect(
         host=host_name,
         port=port_number,
@@ -21,7 +21,7 @@ def getAllContent() -> list[Content]:
         database=database_name
     )
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM contenido")
+    cursor.execute("SELECT * FROM content")
     
     result = list(cursor.fetchall())
     result = [Content(x) for x in result]
@@ -30,7 +30,7 @@ def getAllContent() -> list[Content]:
     
     return result
 
-def get_content_by_id(id: int) -> Content:
+def get_content_by_id_service(id: int) -> Content:
     conn = psycopg2.connect(
         host=host_name,
         port=port_number,
@@ -39,7 +39,7 @@ def get_content_by_id(id: int) -> Content:
         database=database_name
     )
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM contenido WHERE id=%s", 
+    cursor.execute("SELECT * FROM content WHERE id=%s", 
                     (str(id),))
     
     result = cursor.fetchone()
@@ -50,7 +50,7 @@ def get_content_by_id(id: int) -> Content:
     return result
 
 
-def get_content_by_type(type : str) -> Content:
+def get_content_by_type_service(type : str) -> Content:
     conn = psycopg2.connect(
         host=host_name,
         port=port_number,
@@ -59,8 +59,11 @@ def get_content_by_type(type : str) -> Content:
         database=database_name
     )
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM contenido WHERE type=%s", 
+    cursor.execute("SELECT * FROM content WHERE type=%s", 
                     (type,))
+    
+    if cursor.rowcount == 0:
+        return None
     
     result = cursor.fetchone()
     result = Content(result)
@@ -69,7 +72,7 @@ def get_content_by_type(type : str) -> Content:
     
     return result
 
-def create_content(account_id: int, title: str, description: str, type: str, url_content: str, url_cover: str):
+def create_content_service(title: str, description: str, release_date, type: str, url_content: str, url_cover: str):
     conn = psycopg2.connect(
         host=host_name,
         port=port_number,
@@ -78,12 +81,12 @@ def create_content(account_id: int, title: str, description: str, type: str, url
         database=database_name
     )
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO contenido (account_id, title, description, type, url_content, url_cover) VALUES (%s, %s, %s, %s, %s, %s)", 
-                    (str(account_id), title, description, type, url_content, url_cover))
+    cursor.execute("INSERT INTO content (title, description, release_date, type, url_content, url_cover) VALUES (%s, %s, %s, %s, %s, %s)", 
+                    (title, description, release_date, type, url_content, url_cover))
     conn.commit()
     conn.close()
 
-def patch_title_content(id: int, title: str):
+def patch_title_content_service(id: int, title: str):
     conn = psycopg2.connect(
         host=host_name,
         port=port_number,
@@ -92,12 +95,18 @@ def patch_title_content(id: int, title: str):
         database=database_name
     )
     cursor = conn.cursor()
-    cursor.execute("UPDATE contenido SET title=%s WHERE id=%s", 
+    cursor.execute("SELECT * FROM content WHERE id=%s", 
+                    (str(id),))
+    if cursor.rowcount == 0:
+        return None
+    
+    cursor.execute("UPDATE content SET title=%s WHERE id=%s", 
                     (title, str(id)))
+
     conn.commit()
     conn.close()
 
-def patch_description(id: int, description: str):
+def patch_description_service(id: int, description: str):
     conn = psycopg2.connect(
         host=host_name,
         port=port_number,
@@ -106,12 +115,17 @@ def patch_description(id: int, description: str):
         database=database_name
     )
     cursor = conn.cursor()
-    cursor.execute("UPDATE contenido SET description=%s WHERE id=%s", 
+    cursor.execute("SELECT * FROM content WHERE id=%s", 
+                    (str(id),))
+    if cursor.rowcount == 0:
+        conn.close()
+        return None
+    cursor.execute("UPDATE content SET description=%s WHERE id=%s", 
                     (description, str(id)))
     conn.commit()
     conn.close()
 
-def patch_urlCover(id: int, url_cover: str):
+def patch_urlCover_service(id: int, url_cover: str):
     conn = psycopg2.connect(
         host=host_name,
         port=port_number,
@@ -120,7 +134,12 @@ def patch_urlCover(id: int, url_cover: str):
         database=database_name
     )
     cursor = conn.cursor()
-    cursor.execute("UPDATE contenido SET url_cover=%s WHERE id=%s", 
+    cursor.execute("SELECT * FROM content WHERE id=%s", 
+                (str(id),))
+    if cursor.rowcount == 0:
+        conn.close()
+        return None
+    cursor.execute("UPDATE content SET url_cover=%s WHERE id=%s", 
                     (url_cover, str(id)))
     conn.commit()
     conn.close()
@@ -134,7 +153,12 @@ def delete_content_service(id: int):
         database=database_name
     )
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM contenido WHERE id=%s", 
+    cursor.execute("SELECT * FROM content WHERE id=%s", 
+                    (str(id),))
+    if cursor.rowcount == 0:
+        conn.close()
+        return None
+    cursor.execute("DELETE FROM content WHERE id=%s", 
                     (str(id)))
     conn.commit()
     conn.close()

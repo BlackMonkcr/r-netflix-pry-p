@@ -19,27 +19,31 @@ ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE")
 
 @app.get("/content/")
 def read_all_content():
-    content = getAllContent()
+    content = getAllContent_service()
     return content
 
 @app.get("/content/type/{type}")
 def read_content_by_type(type: str):
-    content = get_content_by_type(type)
+    content = get_content_by_type_service(type)
+    if content is None:
+        raise HTTPException(status_code=404, detail="Content not found")
     return content
 
 @app.post("/content/", response_model=dict)
-def create_content(title: str, description: str, type: str, url_content: str, url_cover: str):
-    create_content(title, description, type, url_content, url_cover)
+def create_content(title: str, description: str, release_date: str, type: str, url_content: str, url_cover: str):
+    create_content_service(title, description, release_date, type, url_content, url_cover)
     return {"message": "Content created successfully"}
 
 @app.delete("/content/{id}", response_model=dict)
 def delete_content(id: int):
-    delete_content(id)
+    if (delete_content_service(id) is None):
+        raise HTTPException(status_code=404, detail="Content not found")
     return {"message": "Content deleted"}
 
 @app.put("/content/", response_model=dict)
 def patchTitleContent(id: int, title: str):
-    patch_title_content(id, title)
+    if (patch_title_content_service(id, title) is None):
+        raise HTTPException(status_code=404, detail="Content not found")
     return {"message": "Title updated"}
 
 if __name__ == "__main__":
