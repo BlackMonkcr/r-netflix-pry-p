@@ -26,3 +26,8 @@
      image: blackmonk/api-content
      ports:
        - 8004:8000
+   api-interactions:
+     build: ./interactions
+     image: blackmonk/api-interactions
+     ports:
+       - 8005:8000
