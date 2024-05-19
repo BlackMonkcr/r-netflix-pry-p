@@ -33,7 +33,7 @@ def create_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     access_token_expires = timedelta(minutes=float(ACCESS_TOKEN_EXPIRE_MINUTES))
-    access_token = create_access_token(data={"sub": user["email"]}, expires_delta=access_token_expires)
+    access_token = create_access_token(data={"sub": user.__dict__["email"]}, expires_delta=access_token_expires)
     return Token(access_token=access_token, token_type="bearer")
 
 @app.get("/users/me")
@@ -43,5 +43,5 @@ def read_users_me(token: str = Depends(oauth2_scheme)):
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000, proxy_headers=True, timeout_keep_alive=300)
+    uvicorn.run(app, host="0.0.0.0", port=8000, proxy_headers=True, timeout_keep_alive=300)
 
