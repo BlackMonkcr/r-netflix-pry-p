@@ -36,7 +36,9 @@ const Navbar = () => {
 					<div className='dropdown'>
 						<p
 							onClick={() => {
-								//logout();
+								localStorage.removeItem('user');
+								localStorage.removeItem('token');
+								window.location.href = '/login';
 							}}
 						>
 							Sign Out of Netflix

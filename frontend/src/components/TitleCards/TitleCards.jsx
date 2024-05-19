@@ -41,7 +41,7 @@ const TitleCards = ({ title, category }) => {
 		return chunkedArray;
 	};
 
-	const chunkedData = chunkArray(apiData, 8);
+	const chunkedData = chunkArray(apiData, (category)? 5 : 8);
 
 	return (
 		<div className='title-cards'>

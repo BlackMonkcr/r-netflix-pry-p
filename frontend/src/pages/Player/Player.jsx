@@ -47,6 +47,7 @@ const Player = () => {
 				title={apiData.title}
 				frameborder='0'
 				allowFullScreen
+				autoPlay  // Add the autoPlay attribute to enable autoplay
 			></iframe>
 			<div className='player-info'>
 				<p>{apiData.release_date}</p>

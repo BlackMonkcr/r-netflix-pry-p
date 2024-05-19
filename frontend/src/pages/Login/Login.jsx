@@ -10,6 +10,60 @@ const Login = () => {
 	const [password, setPassword] = useState('');
 	const [loading, setLoading] = useState(false);
 
+	const login = async (email, password) => {
+		try {
+			var myHeaders = new Headers();
+			myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+			var urlencoded = new URLSearchParams();
+			urlencoded.append("username", email);
+			urlencoded.append("pasword", password);
+
+			var requestOptions = {
+				method: 'POST',
+				headers: myHeaders,
+				body: urlencoded,
+				redirect: 'follow'
+			};
+
+			const response = await fetch('http://http://ec2-54-196-136-48.compute-1.amazonaws.com:8000/token/', requestOptions);
+			const data = await response.json();
+			var myHeaders = new Headers();
+			myHeaders.append("Authorization", `Bearer ${data.access_token}`);
+
+			var requestOptions = {
+				method: 'GET',
+				headers: myHeaders,
+				redirect: 'follow'
+			};
+
+			const response_2 = await fetch("http://ec2-54-196-136-48.compute-1.amazonaws.com:8000/users/me", requestOptions);
+			const data_2 = await response_2.json();
+			localStorage.setItem('user', JSON.stringify(data_2));
+			localStorage.setItem('token', data.access_token);
+			window.location.href = '/';
+		}
+		catch (error) {
+			console.log(error);
+		}
+	};
+
+	const signup = async (name, email, password) => {
+		try {
+			const response = await fetch(`http://ec2-54-196-136-48.compute-1.amazonaws.com:8003/users?username=${name}&email=${email}&password=${password}`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			})
+			
+			const data = await response.json();
+			console.log(data);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	const user_auth = async (event) => {
 		event.preventDefault();
 		setLoading(true);

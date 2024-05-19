@@ -13,7 +13,7 @@ const Home = () => {
 	return (
 		<div className='home'>
 			<Navbar />
-			<div className='more-cards'>
+			<div className='more-cards not-home'>
 				<TitleCards title={'Tus mejores Peliculas en Netflix'} category="pelicula"/>
 			</div>
 			<Footer />
