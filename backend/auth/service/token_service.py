@@ -33,7 +33,7 @@ def get_password_hash(password):
 
 def fetch_data(route: str, headers: dict = {}, params: dict = {}, method: str = "GET"):
     # Realiza una solicitud GET a una URL
-    route = "http://localhost:8003/" + route
+    route = "http://ec2-54-196-136-48.compute-1.amazonaws.com:8003/" + route
     if method == "GET":
         response = requests.get(route, headers=headers, params=params)
     # Realiza una solicitud POST a una URL

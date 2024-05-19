@@ -26,7 +26,7 @@ const Login = () => {
 				redirect: 'follow'
 			};
 
-			const response = await fetch('http://http://ec2-54-196-136-48.compute-1.amazonaws.com:8000/token/', requestOptions);
+			const response = await fetch('http://ec2-54-196-136-48.compute-1.amazonaws.com:8000/token/', requestOptions);
 			const data = await response.json();
 			var myHeaders = new Headers();
 			myHeaders.append("Authorization", `Bearer ${data.access_token}`);
