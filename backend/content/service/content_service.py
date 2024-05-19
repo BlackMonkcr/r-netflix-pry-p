@@ -39,7 +39,7 @@ def get_content_by_id_service(id: int) -> Content:
         database=database_name
     )
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM content WHERE id=%s", 
+    cursor.execute("SELECT title, description, release_date, type, url_content, url_cover, id FROM content WHERE id=%s", 
                     (str(id),))
     
     result = cursor.fetchone()
@@ -59,7 +59,7 @@ def get_content_by_type_service(type : str) -> Content:
         database=database_name
     )
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM content WHERE type=%s", 
+    cursor.execute("SELECT title, description, release_date, type, url_content, url_cover, id FROM content WHERE type=%s", 
                     (type,))
     
     if cursor.rowcount == 0:
@@ -115,7 +115,7 @@ def patch_description_service(id: int, description: str):
         database=database_name
     )
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM content WHERE id=%s", 
+    cursor.execute("SELECT title, description, release_date, type, url_content, url_cover, id FROM content WHERE id=%s", 
                     (str(id),))
     if cursor.rowcount == 0:
         conn.close()
@@ -134,7 +134,7 @@ def patch_urlCover_service(id: int, url_cover: str):
         database=database_name
     )
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM content WHERE id=%s", 
+    cursor.execute("SELECT title, description, release_date, type, url_content, url_cover, id FROM content WHERE id=%s", 
                 (str(id),))
     if cursor.rowcount == 0:
         conn.close()
@@ -153,7 +153,7 @@ def delete_content_service(id: int):
         database=database_name
     )
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM content WHERE id=%s", 
+    cursor.execute("SELECT title, description, release_date, type, url_content, url_cover, id FROM content WHERE id=%s", 
                     (str(id),))
     if cursor.rowcount == 0:
         conn.close()

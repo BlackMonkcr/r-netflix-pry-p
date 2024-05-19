@@ -12,23 +12,25 @@ const Player = () => {
 		type: '',
 	});
 
-	const options = {
-		method: 'GET',
-		headers: {
-			accept: 'application/json',
-			Authorization:
-				'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhYmQ0OWI2MDYxMjJmYzZiY2U3ZGRhOTcyMTRhOTJhYyIsInN1YiI6IjY2NDVhNmRhNzY3MTJkOWFmM2JkNmEzOSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.EKCset7nk0toY2MRo0MOd0RimdnQa003zt2fj0ZbrjQ',
-		},
-	};
-
 	useEffect(() => {
-		fetch(
-			`https://api.themoviedb.org/3/movie/${id}/videos?language=en-US`,
-			options
-		)
-			.then((response) => response.json())
-			.then((response) => setApiData(response.results[0]))
-			.catch((err) => console.error(err));
+		var requestOptions = {
+			method: 'GET',
+			redirect: 'follow',
+		};
+
+		const getContent = async () => {
+			const response = await fetch(
+				`http://ec2-52-90-60-133.compute-1.amazonaws.com:8004/content/${id}`,
+				requestOptions
+			);
+
+			const data = await response.json();
+			setApiData(data.results);
+
+			console.log(data.results);
+		}
+
+		getContent();
 	}, []);
 
 	return (

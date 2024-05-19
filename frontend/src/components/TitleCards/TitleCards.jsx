@@ -49,7 +49,7 @@ const TitleCards = ({ title, category }) => {
 			{chunkedData.map((chunk, chunkIndex) => (
 				<div className='card-list' ref={cardsRef} key={chunkIndex}>
 					{chunk.map((card, index) => (
-						<Link to={`/player/${card.id}`} className='card' key={index}>
+						<Link to={`/player/${card.content_id}`} className='card' key={index}>
 							<img
 								src={card.url_cover}
 								alt='card image'

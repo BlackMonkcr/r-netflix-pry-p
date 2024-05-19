@@ -34,6 +34,13 @@ def read_all_content():
     content = getAllContent_service()
     return {"results": content}
 
+@app.get("/content/{id}")
+def read_content_by_id(id: int):
+    content = get_content_by_id_service(id)
+    if content is None:
+        raise HTTPException(status_code=404, detail="Content not found")
+    return content
+
 @app.get("/content/type/{type}")
 def read_content_by_type(type: str):
     content = get_content_by_type_service(type)
