@@ -33,7 +33,7 @@ def create_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     access_token_expires = timedelta(minutes=float(ACCESS_TOKEN_EXPIRE_MINUTES))
-    access_token = create_access_token(data={"sub": user.__dict__["email"]}, expires_delta=access_token_expires)
+    access_token = create_access_token(data={"sub": user["email"]}, expires_delta=access_token_expires)
     return Token(access_token=access_token, token_type="bearer")
 
 @app.get("/users/me")
