@@ -16,11 +16,20 @@ const TitleCards = ({ title, category }) => {
 			method: 'GET',
 			redirect: 'follow',
 		};
-		
-		fetch("http://ec2-52-90-60-133.compute-1.amazonaws.com:8004/content/", requestOptions)
-			.then(response => response.text())
-			.then(result => console.log(result))
-			.catch(error => console.log('error', error));
+
+		const getContent = async () => {
+			const response = await fetch(
+				`http://ec2-52-90-60-133.compute-1.amazonaws.com:8004/content/`,
+				requestOptions
+			);
+
+			const data = await response.json();
+			setApiData(data.results);
+
+			console.log(data.results);
+		}
+
+		getContent();
 	}, []);
 
 	// Divide las tarjetas en sublistas de 8 tarjetas cada una

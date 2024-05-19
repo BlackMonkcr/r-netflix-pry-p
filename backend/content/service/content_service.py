@@ -21,7 +21,7 @@ def getAllContent_service() -> list[Content]:
         database=database_name
     )
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM content")
+    cursor.execute("SELECT title, description, release_date, type, url_content, url_cover, id FROM content")
     
     result = list(cursor.fetchall())
     result = [Content(x) for x in result]
