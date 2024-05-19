@@ -24,3 +24,7 @@
     justify-content: space-between;
     width: 90%;
 }
+
+.link:hover {
+    cursor: pointer;
+}

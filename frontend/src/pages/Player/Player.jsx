@@ -6,10 +6,12 @@ import { useParams, Link } from 'react-router-dom';
 const Player = () => {
 	const { id } = useParams();
 	const [apiData, setApiData] = useState({
-		name: '',
-		key: '',
-		published_at: '',
+		title: '',
+		description: '',
+		release_date: '',
 		type: '',
+		url_content: '',
+		url_cover: '',
 	});
 
 	useEffect(() => {
@@ -25,9 +27,9 @@ const Player = () => {
 			);
 
 			const data = await response.json();
-			setApiData(data.results);
+			setApiData(data);
 
-			console.log(data.results);
+			console.log(data);
 		}
 
 		getContent();
@@ -36,19 +38,19 @@ const Player = () => {
 	return (
 		<div className='player'>
 			<Link to='/'>
-				<img src={back_arrow_icon} alt='' />
+				<img src={back_arrow_icon} alt='' className='link'/>
 			</Link>
 			<iframe
-				width='90%'
-				height='90%'
-				src={`https://www.youtube.com/embed/${apiData.key}`}
-				title='trailer'
+				width='100%'
+				height='100%'
+				src={apiData.url_content}
+				title={apiData.title}
 				frameborder='0'
 				allowFullScreen
 			></iframe>
 			<div className='player-info'>
-				<p>{apiData.published_at.slice(0, 10)}</p>
-				<p>{apiData.name}</p>
+				<p>{apiData.release_date}</p>
+				<p>{apiData.title}</p>
 				<p>{apiData.type}</p>
 			</div>
 		</div>

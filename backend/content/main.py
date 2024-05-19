@@ -46,7 +46,7 @@ def read_content_by_type(type: str):
     content = get_content_by_type_service(type)
     if content is None:
         raise HTTPException(status_code=404, detail="Content not found")
-    return content
+    return {"results": content}
 
 @app.post("/content/", response_model=dict)
 def create_content(title: str, description: str, release_date: str, type: str, url_content: str, url_cover: str):

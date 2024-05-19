@@ -65,8 +65,8 @@ def get_content_by_type_service(type : str) -> Content:
     if cursor.rowcount == 0:
         return None
     
-    result = cursor.fetchone()
-    result = Content(result)
+    result = list(cursor.fetchall())
+    result = [Content(x) for x in result]
 
     conn.close()
     

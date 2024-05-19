@@ -96,3 +96,9 @@
 .nav-dark {
     background: linear-gradient(180deg, rgba(0, 0, 0, 0.8) 100%, transparent);
 }
+
+.link {
+    cursor: pointer;
+    color: #e5e5e5;
+    text-decoration: none;
+}
