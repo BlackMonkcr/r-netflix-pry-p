@@ -22,7 +22,7 @@ const Player = () => {
 
 		const getContent = async () => {
 			const response = await fetch(
-				`http://ec2-52-90-60-133.compute-1.amazonaws.com:8004/content/${id}`,
+				`http://lb-netflix-prod-2027007516.us-east-1.elb.amazonaws.com:8004/content/${id}`,
 				requestOptions
 			);
 

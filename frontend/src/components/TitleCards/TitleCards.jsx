@@ -19,7 +19,7 @@ const TitleCards = ({ title, category }) => {
 
 		const getContent = async () => {
 			const response = await fetch(
-				(category)? `http://ec2-52-90-60-133.compute-1.amazonaws.com:8004/content/type/${category}` : `http://ec2-52-90-60-133.compute-1.amazonaws.com:8004/content/`,
+				(category)? `http://lb-netflix-prod-2027007516.us-east-1.elb.amazonaws.com:8004/content/type/${category}` : `http://lb-netflix-prod-2027007516.us-east-1.elb.amazonaws.com:8004/content/`,
 				requestOptions
 			);
 

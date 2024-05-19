@@ -11,14 +11,15 @@ const Login = () => {
 	const [loading, setLoading] = useState(false);
 
 	const login = async (email, password) => {
+		console.log(email, password);
 		try {
 			var myHeaders = new Headers();
 			myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-
+			
 			var urlencoded = new URLSearchParams();
 			urlencoded.append("username", email);
-			urlencoded.append("pasword", password);
-
+			urlencoded.append("password", password);
+			
 			var requestOptions = {
 				method: 'POST',
 				headers: myHeaders,
@@ -26,7 +27,7 @@ const Login = () => {
 				redirect: 'follow'
 			};
 
-			const response = await fetch('http://ec2-54-196-136-48.compute-1.amazonaws.com:8000/token/', requestOptions);
+			const response = await fetch('http://lb-netflix-prod-2027007516.us-east-1.elb.amazonaws.com:8000/token/', requestOptions);
 			const data = await response.json();
 			var myHeaders = new Headers();
 			myHeaders.append("Authorization", `Bearer ${data.access_token}`);
@@ -37,7 +38,7 @@ const Login = () => {
 				redirect: 'follow'
 			};
 
-			const response_2 = await fetch("http://ec2-54-196-136-48.compute-1.amazonaws.com:8000/users/me", requestOptions);
+			const response_2 = await fetch("http://lb-netflix-prod-2027007516.us-east-1.elb.amazonaws.com:8000/users/me", requestOptions);
 			const data_2 = await response_2.json();
 			localStorage.setItem('user', JSON.stringify(data_2));
 			localStorage.setItem('token', data.access_token);
@@ -50,7 +51,7 @@ const Login = () => {
 
 	const signup = async (name, email, password) => {
 		try {
-			const response = await fetch(`http://ec2-54-196-136-48.compute-1.amazonaws.com:8003/users?username=${name}&email=${email}&password=${password}`, {
+			const response = await fetch(`http://lb-netflix-prod-2027007516.us-east-1.elb.amazonaws.com:8003/users?username=${name}&email=${email}&password=${password}`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
