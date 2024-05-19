@@ -7,7 +7,19 @@ from fastapi.security import OAuth2PasswordRequestForm
 
 app = FastAPI()
 
-CORSMiddleware(app, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+# Configura los orígenes permitidos
+origins = [
+    "*",
+    # Otros orígenes que quieras permitir
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 load_dotenv()
 
@@ -20,7 +32,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE")
 @app.get("/content/")
 def read_all_content():
     content = getAllContent_service()
-    return content
+    return {"results": content}
 
 @app.get("/content/type/{type}")
 def read_content_by_type(type: str):

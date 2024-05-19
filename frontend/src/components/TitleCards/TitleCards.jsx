@@ -6,49 +6,49 @@ const TitleCards = ({ title, category }) => {
 	const [apiData, setApiData] = useState([]);
 	const cardsRef = useRef();
 
-	const options = {
-		method: 'GET',
-		headers: {
-			accept: 'application/json',
-			Authorization:
-				'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhYmQ0OWI2MDYxMjJmYzZiY2U3ZGRhOTcyMTRhOTJhYyIsInN1YiI6IjY2NDVhNmRhNzY3MTJkOWFmM2JkNmEzOSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.EKCset7nk0toY2MRo0MOd0RimdnQa003zt2fj0ZbrjQ',
-		},
-	};
-
 	const handleWheel = (event) => {
 		event.preventDefault();
 		cardsRef.current.scrollLeft += event.deltaY;
 	};
 
 	useEffect(() => {
-		fetch(
-			`https://api.themoviedb.org/3/movie/${
-				category ? category : 'now_playing'
-			}?language=en-US&page=1`,
-			options
-		)
-			.then((response) => response.json())
-			.then((response) => setApiData(response.results))
-			.catch((err) => console.error(err));
-		cardsRef.current.addEventListener('wheel', handleWheel);
+		var requestOptions = {
+			method: 'GET',
+			redirect: 'follow',
+		};
+		
+		fetch("http://ec2-52-90-60-133.compute-1.amazonaws.com:8004/content/", requestOptions)
+			.then(response => response.text())
+			.then(result => console.log(result))
+			.catch(error => console.log('error', error));
 	}, []);
+
+	// Divide las tarjetas en sublistas de 8 tarjetas cada una
+	const chunkArray = (array, size) => {
+		const chunkedArray = [];
+		for (let i = 0; i < array.length; i += size) {
+			chunkedArray.push(array.slice(i, i + size));
+		}
+		return chunkedArray;
+	};
+
+	const chunkedData = chunkArray(apiData, 8);
 
 	return (
 		<div className='title-cards'>
 			<h2>{title ? title : 'Popular on Netflix'}</h2>
-			<div className='card-list' ref={cardsRef}>
-				{apiData.map((card, index) => {
-					return (
+			{chunkedData.map((chunk, chunkIndex) => (
+				<div className='card-list' ref={cardsRef} key={chunkIndex}>
+					{chunk.map((card, index) => (
 						<Link to={`/player/${card.id}`} className='card' key={index}>
 							<img
-								src={`https://image.tmdb.org/t/p/w500` + card.backdrop_path}
+								src={card.url_cover}
 								alt='card image'
 							/>
-							<p>{card.original_title}</p>
 						</Link>
-					);
-				})}
-			</div>
+					))}
+				</div>
+			))}
 		</div>
 	);
 };

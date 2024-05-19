@@ -7,6 +7,7 @@ import play_icon from '../../assets/play_icon.png';
 import info_icon from '../../assets/info_icon.png';
 import TitleCards from '../../components/TitleCards/TitleCards';
 import Footer from '../../components/Footer/Footer';
+import { useHref } from 'react-router-dom';
 
 const Home = () => {
 	return (
@@ -17,28 +18,24 @@ const Home = () => {
 				<div className='hero-caption'>
 					<img src={hero_title} alt='hero title' className='caption-img' />
 					<p>
-						Discovering his ties to a secret ancient order, a young man living
-						in modern Istanbul embarks on a quest to save the city from an
-						immortal enemy.
+					Un joven habitante de la moderna Estambul descubre sus lazos con una antigua orden secreta y se dispone a salvar a su ciudad de un enemigo inmortal.
 					</p>
 					<div className='hero-btns'>
 						<button className='btn'>
 							<img src={play_icon} alt='play icon img' />
 							Play
 						</button>
-						<button className='btn dark-btn'>
-							<img src={info_icon} alt='info icon img' />
-							More Info
-						</button>
+						<a href="https://www.netflix.com/pe/title/80189829">
+							<button className='btn dark-btn' >
+								<img src={info_icon} alt='info icon img' />
+								More Info
+							</button>
+						</a>
 					</div>
-					<TitleCards />
 				</div>
 			</div>
 			<div className='more-cards'>
-				<TitleCards title={'Blockbuster Movies'} category={'top_rated'} />
-				<TitleCards title={'Only on Netflix'} category={'popular'} />
-				<TitleCards title={'Upcoming'} category={'upcoming'} />
-				<TitleCards title={'Top Pics for You'} category={'now_playing'} />
+				<TitleCards title={'En Netflix hoy'} />
 			</div>
 			<Footer />
 		</div>
