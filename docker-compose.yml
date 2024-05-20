@@ -1,33 +1,38 @@
  name: r-netflix
 
  services:
+   frontend:
+     build: ./frontend
+     image: blackmonk/frontend
+     ports:
+       - 80:8080
    api-auth:
-     build: ./auth
+     build: ./backend/auth
      image: blackmonk/api-auth
      ports:
        - 8000:8000
    api-profiles:
-     build: ./profiles
+     build: ./backend/profiles
      image: blackmonk/api-profiles
      ports:
        - 8001:8000
    api-subscriptions:
-     build: ./subscriptions
+     build: ./backend/subscriptions
      image: blackmonk/api-subscriptions
      ports:
        - 8002:8000
    api-users:
-     build: ./users
+     build: ./backend/users
      image: blackmonk/api-users
      ports:
        - 8003:8000
    api-content:
-     build: ./content
+     build: ./backend/content
      image: blackmonk/api-content
      ports:
        - 8004:8000
    api-interactions:
-     build: ./interactions
+     build: ./backend/interactions
      image: blackmonk/api-interactions
      ports:
        - 8005:8000
